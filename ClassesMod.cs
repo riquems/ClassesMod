@@ -18,13 +18,7 @@ namespace ClassesMod
             {
                 ClassUI.visible = true;
             }
-
-            /*if (Player.HasItem(ItemID.WoodenSword) == true)
-            {
-                ClassUI.Class = "Warrior";
-            }*/
         }
-
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             if (ClassUI.Class == "Warrior")
@@ -32,7 +26,6 @@ namespace ClassesMod
                 player.AddBuff(BuffID.Endurance, 300, false);
             }
         }
-
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
             if (ClassUI.Class == "Ranger")
@@ -62,8 +55,6 @@ namespace ClassesMod
     }
     public class Bow : ModItem
     {
-
-        
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bow");
