@@ -18,6 +18,39 @@ namespace ClassesMod
             {
                 ClassUI.visible = true;
             }
+
+            /*if (Player.HasItem(ItemID.WoodenSword) == true)
+            {
+                ClassUI.Class = "Warrior";
+            }*/
+        }
+
+        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        {
+            if (ClassUI.Class == "Warrior")
+            {
+                player.AddBuff(BuffID.Endurance, 300, false);
+            }
+        }
+
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        {
+            if (ClassUI.Class == "Ranger")
+            {
+                player.AddBuff(BuffID.Archery, 300, false);
+            }
+            if (ClassUI.Class == "Sorcerer")
+            {
+                player.AddBuff(BuffID.MagicPower, 300, false);
+            }
+            if (ClassUI.Class == "Conjurer")
+            {
+                player.AddBuff(BuffID.Summoning, 300, false);
+            }
+            if (ClassUI.Class == "Thrower")
+            {
+                player.AddBuff(BuffID.AmmoReservation, 300, false);
+            }
         }
         public override void SetupStartInventory(IList<Item> items)
         {
@@ -25,9 +58,12 @@ namespace ClassesMod
             items.RemoveAt(1);
             items.RemoveAt(0);
         }
+
     }
     public class Bow : ModItem
     {
+
+        
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bow");
@@ -76,6 +112,7 @@ namespace ClassesMod
     {
         public UIPanel ChooseClass;
         public static bool visible = true;
+        public static string Class = "";
 
         public override void OnInitialize()
         {
@@ -89,22 +126,22 @@ namespace ClassesMod
 
             ChooseClass.OnMouseDown += new UIElement.MouseEvent(DragStart);
             ChooseClass.OnMouseUp += new UIElement.MouseEvent(DragEnd);
-
-            /*Texture2D buttonDeleteTexture = ModLoader.GetTexture("Terraria/UI/ButtonDelete");
-            UIImageButton closeButton = new UIImageButton(buttonDeleteTexture);
-            closeButton.Left.Set(740, 0f);
-            closeButton.Top.Set(10, 0f);
-            closeButton.Width.Set(22, 0f);
-            closeButton.Height.Set(22, 0f);
-            closeButton.OnClick += new MouseEvent(CloseButtonClicked);
-            ChooseClass.Append(closeButton);*/
-
+           
             UIText ChooseClassText = new UIText("Choose your class to start with:", 1, true);
             ChooseClassText.Left.Set(20, 0f);
             ChooseClassText.Top.Set(40, 0f);
             ChooseClassText.Width.Set(50, 0f);
             ChooseClassText.Height.Set(50, 0f);
             ChooseClass.Append(ChooseClassText);
+
+            Texture2D WoodenSword = ModLoader.GetTexture("Terraria/Item_24");
+            UIImageButton WoodenSwordButton = new UIImageButton(WoodenSword);
+            WoodenSwordButton.Left.Set(67, 0f);
+            WoodenSwordButton.Top.Set(170, 0f);
+            WoodenSwordButton.Width.Set(100, 0f);
+            WoodenSwordButton.Height.Set(100, 0f);
+            WoodenSwordButton.OnClick += new MouseEvent(WarriorButtonClicked);
+            ChooseClass.Append(WoodenSwordButton);
 
             UIText WarriorText = new UIText("Warrior", 1, false);
             WarriorText.Left.Set(50, 0f);
@@ -114,6 +151,15 @@ namespace ClassesMod
             WarriorText.OnClick += new MouseEvent(WarriorButtonClicked);
             ChooseClass.Append(WarriorText);
 
+            Texture2D WoodenBow = ModLoader.GetTexture("Terraria/Item_39");
+            UIImageButton WoodenBowButton = new UIImageButton(WoodenBow);
+            WoodenBowButton.Left.Set(220, 0f);
+            WoodenBowButton.Top.Set(170, 0f);
+            WoodenBowButton.Width.Set(100, 0f);
+            WoodenBowButton.Height.Set(100, 0f);
+            WoodenBowButton.OnClick += new MouseEvent(RangerButtonClicked);
+            ChooseClass.Append(WoodenBowButton);
+
             UIText RangerText = new UIText("Ranger", 1, false);
             RangerText.Left.Set(200, 0f);
             RangerText.Top.Set(220, 0f);
@@ -121,6 +167,15 @@ namespace ClassesMod
             RangerText.Height.Set(50, 0f);
             RangerText.OnClick += new MouseEvent(RangerButtonClicked);
             ChooseClass.Append(RangerText);
+
+            Texture2D WandofSparking = ModLoader.GetTexture("Terraria/Item_3069");
+            UIImageButton WandofSparkingButton = new UIImageButton(WandofSparking);
+            WandofSparkingButton.Left.Set(372, 0f);
+            WandofSparkingButton.Top.Set(175, 0f);
+            WandofSparkingButton.Width.Set(100, 0f);
+            WandofSparkingButton.Height.Set(100, 0f);
+            WandofSparkingButton.OnClick += new MouseEvent(SorcererButtonClicked);
+            ChooseClass.Append(WandofSparkingButton);
 
             UIText SorcererText = new UIText("Sorcerer", 1, false);
             SorcererText.Left.Set(350, 0f);
@@ -130,6 +185,15 @@ namespace ClassesMod
             SorcererText.OnClick += new MouseEvent(SorcererButtonClicked);
             ChooseClass.Append(SorcererText);
 
+            Texture2D SlimeStaff = ModLoader.GetTexture("Terraria/Item_1309");
+            UIImageButton SlimeStaffButton = new UIImageButton(SlimeStaff);
+            SlimeStaffButton.Left.Set(523, 0f);
+            SlimeStaffButton.Top.Set(170, 0f);
+            SlimeStaffButton.Width.Set(100, 0f);
+            SlimeStaffButton.Height.Set(100, 0f);
+            SlimeStaffButton.OnClick += new MouseEvent(ConjurerButtonClicked);
+            ChooseClass.Append(SlimeStaffButton);
+
             UIText ConjurerText = new UIText("Conjurer", 1, false);
             ConjurerText.Left.Set(500, 0f);
             ConjurerText.Top.Set(220, 0f);
@@ -137,6 +201,15 @@ namespace ClassesMod
             ConjurerText.Height.Set(50, 0f);
             ConjurerText.OnClick += new MouseEvent(ConjurerButtonClicked);
             ChooseClass.Append(ConjurerText);
+
+            Texture2D Shuriken = ModLoader.GetTexture("Terraria/Item_42");
+            UIImageButton ShurikenButton = new UIImageButton(Shuriken);
+            ShurikenButton.Left.Set(673, 0f);
+            ShurikenButton.Top.Set(179, 0f);
+            ShurikenButton.Width.Set(100, 0f);
+            ShurikenButton.Height.Set(100, 0f);
+            ShurikenButton.OnClick += new MouseEvent(ThrowerButtonClicked);
+            ChooseClass.Append(ShurikenButton);
 
             UIText ThrowerText = new UIText("Thrower", 1, false);
             ThrowerText.Left.Set(650, 0f);
@@ -153,6 +226,7 @@ namespace ClassesMod
 
         public void WarriorButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Class = "Warrior";
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 25;
             Player.PutItemInInventory(ItemID.WoodenSword);
@@ -165,6 +239,7 @@ namespace ClassesMod
 
         public void RangerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Class = "Ranger";
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 50;
             Player.PutItemInInventory(ItemID.WoodenBow);
@@ -178,6 +253,7 @@ namespace ClassesMod
 
         private void SorcererButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Class = "Sorcerer";
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 65;
             Player.PutItemInInventory(ItemID.WandofSparking);
@@ -190,6 +266,7 @@ namespace ClassesMod
 
         private void ConjurerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Class = "Conjurer";
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 65;
             Player.PutItemInInventory(ItemID.SlimeStaff);
@@ -202,9 +279,11 @@ namespace ClassesMod
 
         private void ThrowerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Class = "Thrower";
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 50;
-            Player.QuickSpawnItem(ItemID.Snowball, 50);
+            Player.PutItemInInventory(ItemID.Shuriken);
+            Player.QuickSpawnItem(ItemID.Shuriken, 49);
             Player.PutItemInInventory(ItemID.CopperPickaxe);
             Player.PutItemInInventory(ItemID.CopperAxe);
 
