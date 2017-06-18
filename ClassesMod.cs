@@ -198,6 +198,9 @@ namespace ClassesMod
         {
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 20;
+            Player.PutItemInInventory(ItemID.WoodenBow);
+            
+
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
         }
@@ -206,6 +209,7 @@ namespace ClassesMod
         {
             Player Player = Main.player[Main.myPlayer];
             Player.statLifeMax -= 40;
+
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
         }
