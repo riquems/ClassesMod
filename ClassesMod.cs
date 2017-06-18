@@ -11,51 +11,19 @@ namespace ClassesMod
 {
     public class ClassesModPlayer : ModPlayer
     {
-        public string ChosenClass = "Ranger";
-
+        public override void OnEnterWorld(Player player)
+        {
+            Player Player = Main.player[Main.myPlayer];
+            if (Player.statLifeMax == 100)
+            {
+                ClassUI.visible = true;
+            }
+        }
         public override void SetupStartInventory(IList<Item> items)
         {
+            items.RemoveAt(2);
+            items.RemoveAt(1);
             items.RemoveAt(0);
-
-            if (ChosenClass == "Warrior")
-            {
-                Item item = new Item();
-                item.SetDefaults(ItemID.WoodenSword);
-                item.stack = 1;
-                items.Insert(0, item);
-            }
-            else if (ChosenClass == "Ranger")
-            {
-                Item item = new Item();
-                item.SetDefaults(ItemID.WoodenBow);
-                item.stack = 1;
-                items.Insert(0, item);
-                //player.statLifeMax -= 10;
-            }
-            else if (ChosenClass == "Sorcerer")
-            {
-                Item item = new Item();
-                item.SetDefaults(ItemID.WandofSparking);
-                item.stack = 1;
-                items.Insert(0, item);
-                player.statLifeMax -= 20;
-            }
-            else if (ChosenClass == "Conjurer")
-            {
-                Item item = new Item();
-                item.SetDefaults(ItemID.SlimeStaff);
-                item.stack = 1;
-                items.Insert(0, item);
-                player.statLifeMax -= 20;
-            }
-            else if (ChosenClass == "Thrower")
-            {
-                Item item = new Item();
-                item.SetDefaults(ItemID.Snowball);
-                item.stack = 1;
-                items.Insert(0, item);
-                player.statLifeMax -= 15;
-            }
         }
     }
     public class Bow : ModItem
@@ -122,14 +90,14 @@ namespace ClassesMod
             ChooseClass.OnMouseDown += new UIElement.MouseEvent(DragStart);
             ChooseClass.OnMouseUp += new UIElement.MouseEvent(DragEnd);
 
-            Texture2D buttonDeleteTexture = ModLoader.GetTexture("Terraria/UI/ButtonDelete");
+            /*Texture2D buttonDeleteTexture = ModLoader.GetTexture("Terraria/UI/ButtonDelete");
             UIImageButton closeButton = new UIImageButton(buttonDeleteTexture);
             closeButton.Left.Set(740, 0f);
             closeButton.Top.Set(10, 0f);
             closeButton.Width.Set(22, 0f);
             closeButton.Height.Set(22, 0f);
             closeButton.OnClick += new MouseEvent(CloseButtonClicked);
-            ChooseClass.Append(closeButton);
+            ChooseClass.Append(closeButton);*/
 
             UIText ChooseClassText = new UIText("Choose your class to start with:", 1, true);
             ChooseClassText.Left.Set(20, 0f);
@@ -178,28 +146,31 @@ namespace ClassesMod
             ThrowerText.OnClick += new MouseEvent(ThrowerButtonClicked);
             ChooseClass.Append(ThrowerText);
 
-            base.Append(ChooseClass);
-        }
+            Player Player = Main.player[Main.myPlayer];
 
-        private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
-        {
-            Main.PlaySound(SoundID.MenuOpen);
-            visible = false;
+            base.Append(ChooseClass);
         }
 
         public void WarriorButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Player Player = Main.player[Main.myPlayer];
+            Player.statLifeMax -= 25;
+            Player.PutItemInInventory(ItemID.WoodenSword);
+            Player.PutItemInInventory(ItemID.CopperPickaxe);
+            Player.PutItemInInventory(ItemID.CopperAxe);
             Main.PlaySound(SoundID.MenuOpen);
+
             visible = false;
         }
 
         public void RangerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Player Player = Main.player[Main.myPlayer];
-            Player.statLifeMax -= 20;
+            Player.statLifeMax -= 50;
             Player.PutItemInInventory(ItemID.WoodenBow);
-            
+            Player.PutItemInInventory(ItemID.CopperPickaxe);
+            Player.PutItemInInventory(ItemID.CopperAxe);
+            Player.QuickSpawnItem(ItemID.WoodenArrow, 100);
 
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
@@ -208,7 +179,10 @@ namespace ClassesMod
         private void SorcererButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Player Player = Main.player[Main.myPlayer];
-            Player.statLifeMax -= 40;
+            Player.statLifeMax -= 65;
+            Player.PutItemInInventory(ItemID.WandofSparking);
+            Player.PutItemInInventory(ItemID.CopperPickaxe);
+            Player.PutItemInInventory(ItemID.CopperAxe);
 
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
@@ -217,7 +191,11 @@ namespace ClassesMod
         private void ConjurerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Player Player = Main.player[Main.myPlayer];
-            Player.statLifeMax -= 40;
+            Player.statLifeMax -= 65;
+            Player.PutItemInInventory(ItemID.SlimeStaff);
+            Player.PutItemInInventory(ItemID.CopperPickaxe);
+            Player.PutItemInInventory(ItemID.CopperAxe);
+
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
         }
@@ -225,7 +203,11 @@ namespace ClassesMod
         private void ThrowerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Player Player = Main.player[Main.myPlayer];
-            Player.statLifeMax -= 30;
+            Player.statLifeMax -= 50;
+            Player.QuickSpawnItem(ItemID.Snowball, 50);
+            Player.PutItemInInventory(ItemID.CopperPickaxe);
+            Player.PutItemInInventory(ItemID.CopperAxe);
+
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
         }
@@ -269,6 +251,7 @@ namespace ClassesMod
     {
         private UserInterface classUserInterface;
         internal ClassUI classUI;
+
         public ClassesMod()
         {
             Properties = new ModProperties()
