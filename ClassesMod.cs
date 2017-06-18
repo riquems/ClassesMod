@@ -85,12 +85,11 @@ namespace ClassesMod
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.DirtBlock, 10);
+            recipe.AddIngredient(ItemID.DirtBlock, 1);
             recipe.AddTile(TileID.WorkBenches);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             int numberProjectiles = 4 + Main.rand.Next(2); // 4 or 5 shots
@@ -109,8 +108,7 @@ namespace ClassesMod
     {
         public UIPanel ChooseClass;
         public static bool visible = true;
-        public static ClassesModPlayer p = new ClassesModPlayer();
-        Player player = p.player;
+
         public override void OnInitialize()
         {
             ChooseClass = new UIPanel();
@@ -191,45 +189,46 @@ namespace ClassesMod
 
         public void WarriorButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Player Player = Main.player[Main.myPlayer];
             Main.PlaySound(SoundID.MenuOpen);
-            visible = true;
+            visible = false;
         }
 
         public void RangerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            Main.NewText(player.statLifeMax.ToString(), Color.Orange);
+            Player Player = Main.player[Main.myPlayer];
+            Player.statLifeMax -= 20;
             Main.PlaySound(SoundID.MenuOpen);
-            visible = true;
-            
-            //ChosenClass = "Ranger";
+            visible = false;
         }
 
         private void SorcererButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Player Player = Main.player[Main.myPlayer];
+            Player.statLifeMax -= 40;
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
-
-            //ChosenClass = "Ranger";
         }
 
         private void ConjurerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Player Player = Main.player[Main.myPlayer];
+            Player.statLifeMax -= 40;
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
-
-            //ChosenClass = "Ranger";
         }
 
         private void ThrowerButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
+            Player Player = Main.player[Main.myPlayer];
+            Player.statLifeMax -= 30;
             Main.PlaySound(SoundID.MenuOpen);
             visible = false;
-
-            //ChosenClass = "Ranger";
         }
 
         Vector2 offset;
         public bool dragging = false;
+
         private void DragStart(UIMouseEvent evt, UIElement listeningElement)
         {
             offset = new Vector2(evt.MousePosition.X - ChooseClass.Left.Pixels, evt.MousePosition.Y - ChooseClass.Top.Pixels);
@@ -275,7 +274,6 @@ namespace ClassesMod
                 AutoloadSounds = true
             };
         }
-
         public override void Load()
         {
             if (!Main.dedServ)
