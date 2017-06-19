@@ -9,16 +9,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassesMod
 {
+    public class Leveling : GlobalNPC
+    {
+        public override void NPCLoot(NPC target)
+        {
+            Player Player = Main.player[Main.myPlayer];
+        }
+    }
     public class ClassesModPlayer : ModPlayer
     {
         public override void OnEnterWorld(Player player)
         {
             Player Player = Main.player[Main.myPlayer];
+
             if (Player.statLifeMax == 100)
             {
                 ClassUI.visible = true;
             }
         }
+
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             if (ClassUI.Class == "Warrior")
@@ -51,7 +60,6 @@ namespace ClassesMod
             items.RemoveAt(1);
             items.RemoveAt(0);
         }
-
     }
     public class Bow : ModItem
     {
@@ -102,7 +110,7 @@ namespace ClassesMod
     public class ClassUI : UIState
     {
         public UIPanel ChooseClass;
-        public static bool visible = true;
+        public static bool visible;
         public static string Class = "";
 
         public override void OnInitialize()
